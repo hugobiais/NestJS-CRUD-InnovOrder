@@ -27,7 +27,8 @@ export class AuthService {
         },
       });
 
-      // return the user
+      // return the user object without the hash
+      delete user.hash;
       return user;
     } catch (error) {
       if (error instanceof PrismaClientKnownRequestError) {
