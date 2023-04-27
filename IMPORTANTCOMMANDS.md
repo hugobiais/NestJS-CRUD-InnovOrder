@@ -8,3 +8,6 @@ Once we've done the configuration, we can run the following commands:
 `npx prisma migrate dev` (only for developpment because it resets the DB)
 
 To access the db, we can run `npx prisma studio`
+
+for the doc, for the authenticated routes, we want to add as Headers: 
+Authorization     Bearer <TOKEN>
