@@ -25,3 +25,8 @@ List of barcodes to try for the API and for caching:
 3483981900052
 3760091723574
 3250391737284
+
+To exec the docker build command (and test my image), I had to run the commands:
+export DOCKER_BUILDKIT=0
+export COMPOSE_DOCKER_CLI_BUILD=0
+otherwise I woulg get an error, but now I have a shitty UI for terminal with docker... come back on this fix.
