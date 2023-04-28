@@ -20,6 +20,7 @@ export class UserController {
   }
 
   // Another way of doing the above but with custom parameters data
+  // @Get('me')
   // getMe(@GetUser('login') login: string) {
   //   return { login };
   // }
