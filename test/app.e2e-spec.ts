@@ -134,7 +134,7 @@ describe('App e2e', () => {
             Authorization: 'Bearer $S{userAt}',
           })
           .withBody(dto)
-          .expectStatus(200)
+          .expectStatus(202)
           .expectBodyContains(dto.login);
       });
     });
@@ -152,7 +152,7 @@ describe('App e2e', () => {
           Authorization: 'Bearer $S{userAt}',
         })
         .withBody(dto)
-        .expectStatus(200)
+        .expectStatus(202)
         .expectBodyContains('Password successfully changed');
     });
   });
@@ -160,25 +160,39 @@ describe('App e2e', () => {
 
 describe('OpenFoodFact API', () => {
   describe('Access the route without access_token', () => {
-    it('should NOT return the product associated with the barcode', () => {
-      const barcode = '3760091725301';
-      return pactum.spec().get(`/food/${barcode}`).expectStatus(401);
+    it('should NOT return the product associated with the barcode', async () => {
+      return await pactum
+        .spec()
+        .get(`/food/3700214616987`)
+        .expectJson({
+          statusCode: 401,
+          message: 'Unauthorized',
+        })
+        .expectStatus(401);
     });
   });
 
   describe('Send invalid barcode', () => {
-    it('should return a 404 Product not found', () => {
-      const barcode = '99874623';
-      return pactum.spec().get(`/food/${barcode}`).expectStatus(404);
+    it('should return a 404 Product not found', async () => {
+      return await pactum
+        .spec()
+        .get(`/food/99874623`)
+        .withHeaders({
+          Authorization: 'Bearer $S{userAt}',
+        })
+        .expectJson({
+          statusCode: 404,
+          message: 'Product not found',
+        })
+        .expectStatus(404);
     });
   });
 
   describe('Fetch product X for the first time', () => {
-    it('should return the product associated with the barcode and not be in the cache', () => {
-      const barcode = '3760091725301';
-      return pactum
+    it('should return the product associated with the barcode and not be in the cache', async () => {
+      return await pactum
         .spec()
-        .get(`/food/${barcode}`)
+        .get(`/food/3760091725301`)
         .withHeaders({
           Authorization: 'Bearer $S{userAt}',
         })
@@ -188,11 +202,10 @@ describe('OpenFoodFact API', () => {
   });
 
   describe('Fetch product X for the second time', () => {
-    it('should return the product associated from the cache', () => {
-      const barcode = '3760091725301';
-      return pactum
+    it('should return the product associated from the cache', async () => {
+      return await pactum
         .spec()
-        .get(`/food/${barcode}`)
+        .get(`/food/3760091725301`)
         .withHeaders({
           Authorization: 'Bearer $S{userAt}',
         })
