@@ -1,10 +1,15 @@
+import { Inject } from '@nestjs/common';
+import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { PrismaClient } from '@prisma/client';
 
 @Injectable()
 export class PrismaService extends PrismaClient {
-  constructor(config: ConfigService) {
+  constructor(
+    config: ConfigService,
+    @Inject(CACHE_MANAGER) protected readonly cacheManager,
+  ) {
     super({
       datasources: {
         db: {
@@ -12,5 +17,13 @@ export class PrismaService extends PrismaClient {
         },
       },
     });
+  }
+
+  cleanDb() {
+    return this.$transaction([this.user.deleteMany()]);
+  }
+
+  async cleanCache() {
+    return await this.cacheManager.reset();
   }
 }

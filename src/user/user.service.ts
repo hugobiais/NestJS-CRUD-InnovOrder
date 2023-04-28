@@ -24,6 +24,12 @@ export class UserService {
           hash: newHash,
         },
       });
+
+      delete user.hash;
+      return {
+        user,
+        message: 'Password successfully changed',
+      };
     } else {
       user = await this.prisma.user.update({
         where: {

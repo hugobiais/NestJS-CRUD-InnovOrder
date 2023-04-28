@@ -24,14 +24,18 @@ export class FoodController {
   async getProduct(@Param('barcode') barcode: string) {
     const cachedProduct = await this.cacheManager.get(barcode);
     if (cachedProduct) {
-      console.log('Cache hit!');
-      return cachedProduct;
+      return {
+        message: 'Cache Hit!',
+        cachedProduct,
+      };
     } else {
-      console.log('Cache miss!');
       try {
         const product = await this.foodService.getProduct(barcode);
         await this.cacheManager.set(barcode, product, 300000); // set the TTL to 5mn
-        return product;
+        return {
+          message: 'Cache Miss!',
+          product,
+        };
       } catch (error) {
         if (error.response?.status === 404) {
           throw new HttpException('Product not found', HttpStatus.NOT_FOUND);
@@ -43,6 +47,5 @@ export class FoodController {
         }
       }
     }
-
   }
 }
