@@ -4,4 +4,8 @@ export class EditUserDto {
   @IsString()
   @IsOptional()
   login?: string;
+
+  @IsString()
+  @IsOptional()
+  password?: string;
 }
